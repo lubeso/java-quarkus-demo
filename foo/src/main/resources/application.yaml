@@ -1,0 +1,4 @@
+"%dev":
+  quarkus:
+    console:
+      disable-input: true
