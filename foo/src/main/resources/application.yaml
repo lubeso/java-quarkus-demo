@@ -1,4 +1,18 @@
-"%dev":
-  quarkus:
-    console:
-      disable-input: true
+quarkus:
+  console:
+    disable-input: true
+
+  datasource:
+    db-kind: h2
+    jdbc:
+      url: "jdbc:h2:mem:default;DB_CLOSE_DELAY=-1"
+
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+
+"%test":
+  datasource:
+    db-kind: h2
+    jdbc:
+      url: "jdbc:h2:mem:test"
