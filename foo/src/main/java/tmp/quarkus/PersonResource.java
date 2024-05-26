@@ -2,16 +2,19 @@ package tmp.quarkus;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import tmp.quarkus.entities.Person;
@@ -28,8 +31,14 @@ public class PersonResource {
 
     @GET
     @Path("/{id}")
-    public Person findById(Long id) {
-        return Person.findById(id);
+    public Person findById(@PathParam("id") Long id) {
+        Person person = Person.findById(id);
+
+        if (person == null) {
+            throw new WebApplicationException(404);
+        }
+
+        return person;
     }
 
     @POST
@@ -44,11 +53,11 @@ public class PersonResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Person update(Long id, Person person) {
+    public Person update(@PathParam("id") Long id, Person person) {
         Person _person = Person.findById(id);
 
         if (_person == null) {
-            throw new NotFoundException();
+            throw new WebApplicationException(404);
         }
 
         _person.name = person.name;
@@ -60,20 +69,30 @@ public class PersonResource {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(Long id) {
+    public void delete(@PathParam("id") Long id) {
         Person _person = Person.findById(id);
 
         if (_person == null) {
-            throw new NotFoundException();
+            throw new WebApplicationException(404);
         }
 
         _person.delete();
     }
 
     @GET
-    @Path("/search/{name}")
-    public Person findByName(String name) {
-        return Person.findByName(name);
+    @Path("/search")
+    public Person search(@QueryParam("name") Optional<String> name) {
+        if (name.isEmpty()) {
+            throw new WebApplicationException(400);
+        }
+
+        Person person = Person.findByName(name.get());
+
+        if (person == null) {
+            throw new WebApplicationException(404);
+        }
+
+        return person;
     }
 
     @GET
