@@ -9,6 +9,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.quarkus:quarkus-kubernetes'
+    implementation 'io.quarkus:quarkus-container-image-docker'
     implementation 'io.quarkus:quarkus-rest-jackson'
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-jdbc-h2'
