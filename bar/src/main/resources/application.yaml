@@ -1,0 +1,11 @@
+quarkus:
+  console:
+    disable-input: true
+
+  container-image:
+    build: true
+    push: true
+
+  kubernetes:
+    idempotent: true
+    generate-image-pull-secret: true
