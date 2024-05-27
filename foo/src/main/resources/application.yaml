@@ -2,6 +2,10 @@ quarkus:
   console:
     disable-input: true
 
+  container-image:
+    build: true
+    push: true
+
   datasource:
     db-kind: h2
     jdbc:
@@ -10,6 +14,10 @@ quarkus:
   hibernate-orm:
     database:
       generation: drop-and-create
+
+  kubernetes:
+    idempotent: true
+    generate-image-pull-secret: true
 
 "%test":
   datasource:
