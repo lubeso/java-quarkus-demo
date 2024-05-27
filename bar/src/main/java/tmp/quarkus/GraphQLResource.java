@@ -1,19 +1,29 @@
 package tmp.quarkus;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import org.eclipse.microprofile.graphql.Description;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Query;
 
-import tmp.quarkus.entities.Film;
+import java.util.List;
+import jakarta.inject.Inject;
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.pgclient.PgPool;
+import tmp.quarkus.entities.Fruit;
 
 @GraphQLApi
 public class GraphQLResource {
-    @Query("allFilms") 
-    @Description("Get all Films from a galaxy far far away") 
-    public List<Film> getAllFilms() {
-        return new ArrayList<>();
+
+    @Inject
+    private PgPool connection;
+
+    public GraphQLResource(PgPool connection) {
+        this.connection = connection;
     }
+
+    @Query("allFruits") 
+    @Description("Get all fruits")
+    public Uni<List<Fruit>> getAllFruits() {
+        return Fruit.findAll(connection).collect().asList();
+    }
+
 }
