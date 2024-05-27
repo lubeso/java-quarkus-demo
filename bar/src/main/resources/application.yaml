@@ -6,6 +6,25 @@ quarkus:
     build: true
     push: true
 
+  datasource:
+    db-kind: postgresql
+
   kubernetes:
     idempotent: true
     generate-image-pull-secret: true
+
+"%prod":
+  custom:
+    datsource:
+      create-schema: false
+  quarkus:
+    kubernetes:
+      env:
+        secrets: postgresql
+        mapping:
+          quarkus-datasource-password:
+            from-secret: postgresql
+            with-key: postgres-password
+        vars:
+          quarkus-datasource-reactive-url: "postgresql://postgresql:5432/postgres"
+          quarkus-datasource-username: postgres
